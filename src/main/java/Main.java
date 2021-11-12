@@ -11,7 +11,7 @@ public class Main {
         try
         {
             DatabaseConnection.connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/testdb",
-                    "postgres", "ATOM intel1000 #ANVIL_932");
+                    "your username here", "your password here");
         }
         catch (Exception e)
         {
