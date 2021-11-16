@@ -17,11 +17,11 @@
         </property>
 
         <property name = "hibernate.connection.username">
-            postgres
+            type your username here
         </property>
 
         <property name = "hibernate.connection.password">
-            ATOM intel1000 #ANVIL_932
+            type your password here
         </property>
 
         <!-- List of XML mapping files -->
