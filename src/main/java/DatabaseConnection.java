@@ -19,17 +19,17 @@ public class DatabaseConnection
             Statement stmt = connection.createStatement();
             String sql = "CREATE TABLE USERS " +
                     "(id NUMERIC PRIMARY KEY NOT NULL," +
-                    "groupID CHAR(20))";
+                    "studentGroup CHAR(20))";
             stmt.executeUpdate(sql);
 
-            sql = "CREATE TABLE GROUPS " +
+            sql = "CREATE TABLE STUDENTGROUPS " +
                     "(id CHAR(20) PRIMARY KEY NOT NULL," +
-                    "scheduleID INT NOT NULL)";
+                    "schedule INT NOT NULL)";
             stmt.executeUpdate(sql);
 
             sql = "CREATE TABLE SCHEDULES " +
                     "(id INT PRIMARY KEY NOT NULL," +
-                    "dayJSON JSON);";
+                    "dayJSON TEXT);";       // "dayJSON JSON);";
             stmt.executeUpdate(sql);
             stmt.close();
             connection.close();

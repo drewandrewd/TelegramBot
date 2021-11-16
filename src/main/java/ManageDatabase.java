@@ -11,20 +11,19 @@ public class ManageDatabase {
     public static SessionFactory factory;
     public static void fillDatabase()
     {
-        try {
-            factory = new Configuration().configure().buildSessionFactory();
-        } catch (Throwable ex) {
-            System.err.println("Failed to create sessionFactory object." + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
+        System.out.println("FILL DATABASE ENTERED");
 
         ManageDatabase MD = new ManageDatabase();
+        System.out.println("NEW MANAGEDATABASE OK");
 
         Schedule schedule = MD.addSchedule(986787, "22 October Friday: 09:00-10:30 Physics 10:40-12:10 Physics");
-        Group group = MD.addGroup("MEH-482201", 986787);    // SECOND ARGUMENT SHOULD BE A CLASS INSTEAD
-        User user = MD.addUser(1234567890, "MEH-482201");    // SECOND ARGUMENT SHOULD BE A CLASS INSTEAD
+        System.out.println("NEW SCHEDULE OK");
+        StudentGroup group = MD.addGroup("MEH-482201", schedule);    // SECOND ARGUMENT SHOULD BE A CLASS INSTEAD
+        System.out.println("NEW GROUP OK");
+        User user = MD.addUser(1234567890, group);    // SECOND ARGUMENT SHOULD BE A CLASS INSTEAD
+        System.out.println("NEW USER OK");
 
-        MD.listDatabase();
+        //MD.listDatabase();
     }
 
     public Schedule addSchedule(int id, String text)
@@ -47,15 +46,15 @@ public class ManageDatabase {
         return schedule;
     }
 
-    public Group addGroup(String id, int groupID)
+    public StudentGroup addGroup(String id, Schedule schedule)
     {
         Session session = factory.openSession();
         Transaction tx = null;
-        Group group = null;
+        StudentGroup group = null;
 
         try {
             tx = session.beginTransaction();
-            group = new Group(id, groupID);
+            group = new StudentGroup(id, schedule);
             session.save(group);
             tx.commit();
         } catch (HibernateException e) {
@@ -67,7 +66,7 @@ public class ManageDatabase {
         return group;
     }
 
-    public User addUser(long id, String groupID)
+    public User addUser(long id, StudentGroup group)
     {
         Session session = factory.openSession();
         Transaction tx = null;
@@ -75,7 +74,7 @@ public class ManageDatabase {
 
         try {
             tx = session.beginTransaction();
-            user = new User(id, groupID);
+            user = new User(id, group);
             session.save(user);
             tx.commit();
         } catch (HibernateException e) {
@@ -95,27 +94,27 @@ public class ManageDatabase {
 
         try {
             tx = session.beginTransaction();
-            List users = session.createQuery("FROM USERS").list();
+            List users = session.createQuery("FROM User").list();       // not FROM USERS: https://stackoverflow.com/a/47624917
             for (Iterator iterator = users.iterator(); iterator.hasNext();)
             {
                 User user = (User) iterator.next();
                 output = output += ("Chat ID: " + user.getId());
-                output = output += ("Group: " + user.getGroupID());
+                output = output += ("Group: " + user.getStudentGroup().getId());
             }
             tx.commit();
 
             tx = session.beginTransaction();
-            List groups = session.createQuery("FROM GROUPS").list();
+            List groups = session.createQuery("FROM StudentGroup").list();
             for (Iterator iterator = groups.iterator(); iterator.hasNext();)
             {
-                Group group = (Group) iterator.next();
+                StudentGroup group = (StudentGroup) iterator.next();
                 output = output += ("Group: " + group.getId());
-                output = output += ("Schedule ID: " + group.getScheduleID());
+                output = output += ("Schedule ID: " + group.getSchedule().getId());
             }
             tx.commit();
 
             tx = session.beginTransaction();
-            List schedules = session.createQuery("FROM SCHEDULES").list();
+            List schedules = session.createQuery("FROM Schedule").list();
             for (Iterator iterator = schedules.iterator(); iterator.hasNext();)
             {
                 Schedule schedule = (Schedule) iterator.next();

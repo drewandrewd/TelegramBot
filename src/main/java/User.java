@@ -1,27 +1,31 @@
 public class User       // a persistent class
 {
     private long id;     //chatID (64 bit)
-    private String groupID;
+    private StudentGroup studentGroup;
 
     public User() {}
-    public User(long id, String groupID) {
+    public User(long id, StudentGroup studentGroup) {
         this.id = id;
-        this.groupID = groupID;
+        this.studentGroup = studentGroup;
     }
 
-    public long getId() {
+    public long getId()
+    {
         return id;
     }
 
-    public void setId( long id ) {
+    public void setId (long id)
+    {
         this.id = id;
     }
 
-    public String getGroupID() {
-        return groupID;
+    public StudentGroup getStudentGroup()
+    {
+        return studentGroup;
     }
 
-    public void setGroupID(String groupID) {
-        this.groupID = groupID;
+    public void setStudentGroup(StudentGroup studentGroup)
+    {
+        this.studentGroup = studentGroup;
     }
 }
