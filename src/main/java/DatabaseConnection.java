@@ -1,5 +1,8 @@
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -8,14 +11,16 @@ import java.sql.Statement;
 
 public class DatabaseConnection
 {
-    public static Connection connection;       // pointless?
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseConnection.class);
+
+    public static Connection connection;
 
     public static void createDatabase()
     {
         try
         {
             var connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/testdb",
-                    "postgres", "ATOM intel1000 #ANVIL_932");
+                    "Your username here", "Your password here");
             Statement stmt = connection.createStatement();
             String sql = "CREATE TABLE USERS " +
                     "(id NUMERIC PRIMARY KEY NOT NULL," +
@@ -23,7 +28,7 @@ public class DatabaseConnection
             stmt.executeUpdate(sql);
 
             sql = "CREATE TABLE STUDENTGROUPS " +
-                    "(id CHAR(20) PRIMARY KEY NOT NULL," +
+                    "(id CHAR(200) PRIMARY KEY NOT NULL," +
                     "schedule INT NOT NULL)";
             stmt.executeUpdate(sql);
 
@@ -36,12 +41,10 @@ public class DatabaseConnection
         }
         catch (Exception e)
         {
-            System.out.println("Failed to access the database");
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            logger.error("FATAL: failed to create database tables. The exception and stack trace follows.", e);
             System.exit(0);
         }
 
-        System.out.println("Created database successfully");
+        logger.debug("Created database tables successfully.");
     }
 }
