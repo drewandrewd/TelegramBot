@@ -1,10 +1,12 @@
 const axios = require('axios')
 const cheerio = require('cheerio')
+const args = process.argv;
+const id = args[2];
 
-axios.get('https://urfu.ru/api/schedule/groups/lessons/985155/20211021/').then(html => {
+axios.get('https://urfu.ru/api/schedule/groups/lessons/' + id).then(html => {
   const $ = cheerio.load(html.data)
 
-  const result = [] // результат
+  const result = []
 
   let currentDayIndex = -1 // текущий день (при итерации становится 0)
   $('body > table > tbody > tr').each((i, elem) => { // перебираем каждую строку
@@ -34,6 +36,9 @@ axios.get('https://urfu.ru/api/schedule/groups/lessons/985155/20211021/').then(h
       }
     }
   })
+  var json = JSON.stringify(result)
+  const fs = require('fs');
+  fs.writeFile('result.json', json, 'utf8');
+  console.log("OK")
 
-  console.log(result)
-})
+}) 
